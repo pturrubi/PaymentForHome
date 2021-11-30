@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+    
+    <head>        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mortgage Loan Calculator</title>
+        <script src="accounting.js"></script>
+
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Just+Another+Hand&family=Lobster&family=Pacifico&family=Patrick+Hand&family=Petemoss&family=Zen+Kaku+Gothic+Antique:wght@300&family=Zen+Kurenaido&display=swap');
+        
+            h1 {
+                font-family: 'Architects Daughter', cursive;
+                font-size: 45px;
+            }
+
+            .fontsize {
+                font-family: 'Architects Daughter', fantasy ;
+                font-size: 20px;
+            }
+
+            body {     
+                background: linear-gradient(to left, lightgreen 0%, gold 100%);
+                color: black;
+            }
+            img{
+                width: 300px;
+                height: auto;
+                border-color: solid black;
+            }
+
+            a:link,
+            a:visited{
+                color: darkred;
+                font-weight: bold;
+                text-decoration: none;
+            }
+    
+            .tabledisplay {
+                width: 100%;
+                border:solid black 1px;
+                border-collapse: collapse;
+                padding: 3px;
+            }
+
+            .trdisplay {
+                border: solid black 1px;
+                border-collapse: collapse;
+            }
+
+            .tddisplay {
+                border:solid black 1px;
+                border-collapse: collapse;
+                padding: 0px 20px 0px 20px;
+
+            }
+
+            .borderclass{
+                border:solid white 5px;
+            }
+         
+
+            
+        </style>
+    </head>
+    <body>
+        <table class="borderclass">
+            <tr>
+                <td>
+
+                    <h1>Mortgage Loan Calculator</h1>
+                    <h3>Enter Data </h3>
+
+                        <form name="theform">
+                            <table>
+                                <tr>
+                                    <td><strong><span style= "float: left">Loan Amount:</span></strong></td>
+                                    <td><input name="loanAmountFmInput" size="10"></td>
+                                    <td rowspan="7"><img src="valuation.png" alt=" picture homeCal"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span style="float: left;">Rate:</span></strong></td>
+                                    <td><input name="rateFmInput" size="10"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span style="float: left;">Years:</span></strong></td>
+                                    <td><input name="yearsFmInput" size="10"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span style="float: left;">Num of Payments:</span></strong></td>
+                                    <td style="background-color: white; color:black" id="numOfPaymentsFmOutput"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span style="float: left;">Monthly Payment:</span></strong></td>
+                                    <td style="background-color: white; color:black" id="paymentFmOutput"></td>
+                                </tr>
+                                <tr>
+                                    <td><strong><span style="float: left;">Total Interest:</span></strong></td>
+                                    <td style="background-color:white; color:black" id="totalInterestFmOutput"></td>                    
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <input type="button" name="calc" value="Calculate" onclick= "calculate()">
+                                        <input type="button" name="clear" value="Clear" onclick= "clearinfo()">
+                                    </td>
+                                </tr>
+                            </table>
+                        
+
+                        <p></p>
+
+                        <span class="fontsize">Loan Amount:</span>
+                        <span class="fontsize" id="loanAmountFmOutput"></span>
+                        <span id="reportFmOutput" style= "background-color:white; color:black"></span>
+                        </form>
+                        <script>
+                            document.theform.loanAmountFmInput.focus();
+
+                            function calculate(){
+                                var loan;
+                                var rate;
+                                var years;
+                                var months;
+
+                                var payment;
+                                var totalInterest;
+                                var interest;
+
+                                var principal;
+                                var balance;
+                
+                                var report;
+                               //get data from the input boxes
+                                loan = parseFloat (document.theform.loanAmountFmInput.value);
+                                rate = parseFloat (document.theform.rateFmInput.value);
+                                years = parseInt (document.theform.yearsFmInput.value); 
+
+                                months = parseInt(years * 12);
+
+                                rate = parseFloat(rate / 1200);
+
+                                payment = loan * rate * (Math.pow(1 + rate, months)) / (Math.pow (1 + rate, months) - 1);
+
+                                totalInterest = parseFloat((payment * months) -loan);
+
+                                report = "<table class='tabledisplay'>"
+
+                                balance = parseFloat(loan);
+
+                                report += "<tr class='trdisplay'><td class='tddisplay'> " + "pmt num" + " </td><td class='tddisplay'> " + "Interest" + " </td><td class='tddisplay'> " + "Principal" +  " </td><td class='tddisplay'> " + " Payment " + " </td><td class='tddisplay'> " + " Balance " + " </td></tr>";
+
+                                for (i=1; i< months; i++){
+                                    interest = parseFloat(balance * rate);
+                                    principal = parseFloat(payment - interest);
+                                    balance = parseFloat(balance - principal);
+                                    report += "<tr class='trdisplay'><td class='tddisplay'>" + i + "</td><td class='tddisplay'>" + "<span class = 'alignright'>" +  accounting.formatMoney(interest) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>" + accounting.formatMoney(principal) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>"  + accounting.formatMoney(payment) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>" + accounting.formatMoney(balance) + "</span></td></tr>";
+                                }
+
+                                    interest = parseFloat(balance * rate);
+                                    principal = parseFloat(payment - interest);
+                                    balance = parseFloat(balance - principal);
+                                    report += "<tr class='trdisplay'><td class='tddisplay'>" + i + "</td><td class='tddisplay'>" + "<span class = 'alignright'>" +  accounting.formatMoney(interest) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>" + accounting.formatMoney(principal) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>"  + accounting.formatMoney(payment) + "</span></td><td class='tddisplay'>" + "<span class = 'alignright'>" + accounting.formatMoney(0) + "</span></td></tr>";
+
+
+
+                                report += "</table>"
+
+                                document.getElementById("reportFmOutput").innerHTML = report;
+
+                                document.getElementById("numOfPaymentsFmOutput").innerHTML = months;
+                                document.getElementById("paymentFmOutput").innerHTML = accounting.formatMoney(payment);
+                                document.getElementById("totalInterestFmOutput").innerHTML = accounting.formatMoney(totalInterest);
+
+                                document.getElementById("loanAmountFmOutput").innerHTML = accounting.formatMoney(loan);
+                                document.theform.loanAmountFmInput.value = accounting.formatMoney(loan);                               
+                            }
+                            
+
+                            function clearinfo(){
+                                document.theform.loanAmountFmInput.value = " ";
+                                document.theform.rateFmInput.value = " ";
+                                document.theform.yearsFmInput.value = " ";
+
+                                document.getElementById("numOfPaymentsFmOutput").innerHTML = " ";
+                                document.getElementById("paymentFmOutput").innerHTML = " ";
+                                document.getElementById("totalInterestFmOutput").innerHTML = " ";
+
+                                document.getElementById("loanAmountFmOutput").innerHTML = " ";
+                                document.getElementById("reportFmOutput").innerHTML = " ";
+
+                                document.theform.loanAmountFmInput.focus();
+
+                            }
+
+                        </script>
+
+            </td>
+        </tr>
+    </table>
+    <p></p>
+
+
+<p></p>
+<A HREF="http://csnet.southtexascollege.edu/localuser/pturrubi/">Go Back to Homepage</A><P>
+
+    <strong>Patricia Turrubiates Lara</strong><P>
+
+</body>
+</html>
+
+    
